@@ -1,7 +1,9 @@
 
 <template>
+
+
  
- <div>
+ <!-- <div>
   <input v-model="userForm.name" placeholder="name"/>
  </div>
 
@@ -10,11 +12,15 @@
  </div>
 
   <div>
-  <button @click="onGet">Get</button>
   <button @click="onSubmit">Submit</button>
   <button @click="onDelete">Delete</button>
- </div>
+ </div> -->
 
+ <FormVue ref="refFormVue"  @onSubmit="onSubmit" />
+
+ <br/>
+
+ <TableVue :userFormList="userFormList" @onUpdate="onUpdate" @onDelete="onDelete"/>
 
 </template>
 
@@ -23,9 +29,17 @@
 // setup can be used for compositon api
 // but now i will use options api
 import axios from 'axios';
+import TableVue from './components/Table.vue';
+import FormVue from './components/Form.vue';
+import Form from './components/Form.vue';
 
 export default {
   name: 'App',
+  components:{
+    TableVue,
+    FormVue,
+    Form
+},
   mounted(){
    this.onGet();
   },
@@ -40,62 +54,62 @@ export default {
     }
   },
   methods: {
+    a() {
+
+    },
 
     onGet() {
        axios.get('http://localhost:3000/api/userForm').then(
       (response) => {
         this.userFormList = response.data;
-        if (this.userFormList.length > 0) {
-          this.userForm.age = this.userFormList[0].age;
-          this.userForm.name =  this.userFormList[0].name;
-          this.id = this.userFormList[0]._id;
-          console.log(this.id);
-        }else{
-          alert('db is empty');
-        }
        
       }
     );
     },
 
-    onSubmit() {
-      if (this.id === '') {
-            axios
-      .post('http://localhost:3000/api/userForm', this.userForm).then(
+    onSubmit(setUserForm) {
+      console.log(setUserForm);
+      let userFormToSend = {
+        name: setUserForm.name,
+        age: setUserForm.age,
+      };
+      if (setUserForm.id == null) {
+         axios
+      .post('http://localhost:3000/api/userForm', userFormToSend).then(
         (res) => 
         {
           console.log(res);
+           window.location.reload();
+            this.$refs.refFormVue.clear();
+
         }
       )
       } else {
         axios
-        .put('http://localhost:3000/api/userForm/' + this.id, this.userForm).then(
-          (res) => 
-          {
-            console.log(res);
-          }
-        )
-      }
-      window.location.reload();
-    
-   
-    },
-    onDelete (){
-      if(this.id === ''){
-        alert('Nothing to delete');
-        return;
-      }
-      axios
-      .delete('http://localhost:3000/api/userForm/' + this.id).then(
+      .put('http://localhost:3000/api/userForm/' + setUserForm.id, userFormToSend).then(
         (res) => 
         {
           console.log(res);
+           window.location.reload();
+           this.$refs.refFormVue.clear();
         }
       )
-      this.clear()
-      window.location.reload();
-        
+      }
+   
     },
+    onDelete(setUserForm) {
+      console.log(setUserForm._id);
+      axios.delete('http://localhost:3000/api/userForm/' + setUserForm._id).then(
+        (res) => {
+          console.log(res);
+          window.location.reload();
+        }
+      )
+    },
+    onUpdate(userForm){
+      this.$refs.refFormVue.setUserData(userForm);
+    },
+
      clear() {
       this.id='';
       this.userFormList = [];
