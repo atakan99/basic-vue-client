@@ -36,7 +36,7 @@ export default {
         this.userForm = {
             name: userForm.name,
             age: userForm.age,
-            id: userForm._id
+            id: userForm.id
         }
     },
      clear() {
