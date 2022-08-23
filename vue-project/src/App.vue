@@ -68,7 +68,6 @@ export default {
     },
 
     onSubmit(setUserForm) {
-      console.log(setUserForm);
       let userFormToSend = {
         name: setUserForm.name,
         age: setUserForm.age,
@@ -78,7 +77,6 @@ export default {
       .post('http://localhost:3000/api/userForm', userFormToSend).then(
         (res) => 
         {
-          console.log(res);
            window.location.reload();
             this.$refs.refFormVue.clear();
 
@@ -89,7 +87,6 @@ export default {
       .put('http://localhost:3000/api/userForm/' + setUserForm.id, userFormToSend).then(
         (res) => 
         {
-          console.log(res);
            window.location.reload();
            this.$refs.refFormVue.clear();
         }
@@ -98,10 +95,8 @@ export default {
    
     },
     onDelete(setUserForm) {
-      console.log(setUserForm._id);
       axios.delete('http://localhost:3000/api/userForm/' + setUserForm._id).then(
         (res) => {
-          console.log(res);
           window.location.reload();
         }
       )

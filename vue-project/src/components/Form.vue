@@ -30,7 +30,6 @@ export default {
   methods: {
 
     onSubmit() {
-        console.log(this.userForm)
         this.$emit('onSubmit', this.userForm);
     },
     setUserData(userForm){
@@ -39,7 +38,6 @@ export default {
             age: userForm.age,
             id: userForm._id
         }
-        console.log(this.userForm)
     },
      clear() {
       this.userForm = {
